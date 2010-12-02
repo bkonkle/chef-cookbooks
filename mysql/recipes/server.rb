@@ -91,7 +91,7 @@ grants_path = value_for_platform(
 begin
   t = resources(:template => "/etc/mysql/grants.sql")
 rescue
-  Chef::Log.warn("Could not find previously defined grants.sql resource")
+  Chef::Log.debug("Could not find previously defined grants.sql resource")
   t = template "/etc/mysql/grants.sql" do
     path grants_path
     source "grants.sql.erb"
