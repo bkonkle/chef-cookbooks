@@ -36,7 +36,7 @@ node[:django][:sites].each_pair do |name, site|
   venvs_dir = node[:django][:virtualenvs]
   path = (site[:path] or "#{sites_dir}/#{domain}")
   venv = (site[:venv] or "#{venvs_dir}/#{name}")
-  server_type = (site[:server_type] or "gunicorn")
+  server_type = node[:django][:app_server]
   packages = (site[:packages] or {})
   requirements = (site[:requirements] or "#{path}/code/requirements.txt")
 
