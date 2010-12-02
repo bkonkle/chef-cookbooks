@@ -12,10 +12,6 @@ node[:users].each_pair do |username, user|
   end
   
   home_dir = "/home/#{username}"
-  
-  group username do
-    gid user[:uid]
-  end
 
   user username do
     uid user[:uid]
@@ -24,6 +20,10 @@ node[:users].each_pair do |username, user|
     comment user[:full_name]
     supports :manage_home => true
     home home_dir
+  end
+  
+  group username do
+    gid user[:uid]
   end
 
   directory "#{home_dir}/.ssh" do
