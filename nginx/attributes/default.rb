@@ -1,1 +1,1 @@
-default[:nginx][:conf_dir] = "/etc/nginx"
+default[:nginx][:conf_dir] = "/etc/nginx/conf.d"
