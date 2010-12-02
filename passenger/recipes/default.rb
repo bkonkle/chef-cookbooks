@@ -1,7 +1,11 @@
 package "libssl-dev"
 package "rake"
 package "libcurl4-openssl-dev"
-gem_package "passenger"
+
+gem_package "passenger" do
+  version node[:passenger][:version]
+end
+
 nginx_path = "/usr/local/src/nginx-passenger"
 
 unless File.directory?(nginx_path)
