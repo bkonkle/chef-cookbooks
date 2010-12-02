@@ -25,7 +25,7 @@ unless File.directory?(nginx_path)
       cwd nginx_path
     end
     
-    nginx_ver = `ls #{nginx_path} | grep nginx- | cut -d- -f2`
+    nginx_ver = `ls #{nginx_path} | grep nginx- | cut -d- -f2`.strip!
     nginx_src = "#{nginx_path}/nginx-#{nginx_ver}"
     passenger_root = `/var/lib/gems/1.8/bin/passenger-config --root`
     
