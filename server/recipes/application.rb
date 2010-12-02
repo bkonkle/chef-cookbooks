@@ -9,3 +9,7 @@ directory node[:sites][:dir] do
   group node[:sites][:group]
   mode node[:sites][:mode]
 end
+
+if node[:database][:type] == "mysql"
+  include_recipe "mysql::client"
+end
