@@ -1,6 +1,8 @@
 groups = Hash.new
 
 node[:users].each_pair do |username, user|
+  shell = (user[:shell] or "/bin/bash")
+  
   user[:groups].each do |group|
     if groups[group]
       unless groups[group].include?(username)
@@ -16,7 +18,7 @@ node[:users].each_pair do |username, user|
   user username do
     uid user[:uid]
     gid user[:uid]
-    shell user[:shell]
+    shell shell
     comment user[:full_name]
     supports :manage_home => true
     home home_dir
