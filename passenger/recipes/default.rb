@@ -59,6 +59,8 @@ unless File.directory?(nginx_path)
   end
 end
 
+include_recipe "nginx::base"
+
 template node[:nginx][:conf_dir] + "/passenger.conf" do
   source "nginx.conf.erb"
   owner "root"
@@ -66,5 +68,3 @@ template node[:nginx][:conf_dir] + "/passenger.conf" do
   mode 0755
   notifies :restart, resources(:service => "nginx")
 end
-
-include_recipe "nginx::base"
