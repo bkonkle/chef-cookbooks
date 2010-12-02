@@ -4,7 +4,7 @@ include_recipe "users"
 include_recipe "sudo"
 
 BASE_PACKAGES = ["git-core", "bash-completion", "emacs23-nox", "postfix",
-                 "bsd-mailx", "python-software-properties"]
+                 "bsd-mailx", "build-essential", "python-software-properties"]
 
 execute "update-locale" do
   command "update-locale LANG=en_US.UTF-8 && export LANG=en_US.UTF-8"
