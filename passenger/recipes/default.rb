@@ -62,7 +62,7 @@ end
 include_recipe "nginx::base"
 
 template node[:nginx][:conf_dir] + "/passenger.conf" do
-  source "nginx.conf.erb"
+  source "passenger.conf.erb"
   owner "root"
   group "root"
   mode 0755
