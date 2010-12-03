@@ -58,12 +58,17 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
       to "/etc/nginx/sites-available/#{params[:name]}"
     end
   case :enable
+    
     link "/etc/nginx/sites-enabled/#{params[:name]}" do
       to "/etc/nginx/sites-available/#{params[:name]}"
     end
+    
   case :disable
+    
     link "/etc/nginx/sites-enabled/#{params[:name]}" do
       action :delete
       only_if "test -f /etc/nginx/sites-enabled/#{params[:name]}"
     end
+    
+  end
 end
