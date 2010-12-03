@@ -20,7 +20,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
     group grp
     action params[:action]
     migration_command "rake db:migrate"
-    environment node[:rails][:environment]
+    environment "RAILS_ENV" => node[:rails][:environment]
     params[:deploy_settings].each_pair do |func_name, param_value|
       send(func_name, param_value)
     end
