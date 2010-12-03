@@ -1,7 +1,7 @@
 include_recipe "passenger"
 
 nginx_path = node[:nginx][:source_path]
-nginx_ver node[:nginx][:version]
+nginx_ver = node[:nginx][:version]
 nginx_src = "#{nginx_path}/nginx-#{nginx_ver}"
 gems_dir = node[:languages][:ruby][:gems_dir]
 passenger_root = `#{gems_dir}/bin/passenger-config --root`
