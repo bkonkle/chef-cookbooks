@@ -1,6 +1,6 @@
-include_recipe "ruby"
-
 define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
+  include_recipe "ruby"  
+  
   raise "Please provide the deploy details." unless params[:deploy_settings]
   raise "Please provide the config template to use." unless params[:template]
 
