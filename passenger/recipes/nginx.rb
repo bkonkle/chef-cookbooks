@@ -63,6 +63,6 @@ template node[:nginx][:conf_dir] + "/passenger.conf" do
   source "passenger.conf.erb"
   owner "root"
   group "root"
-  mode 0755
+  mode "0644"
   notifies :restart, resources(:service => "nginx")
 end

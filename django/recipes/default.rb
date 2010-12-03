@@ -1,21 +1,4 @@
 include_recipe "python"
-include_recipe "server::application"
-
-# Recipe to install individual Django sites
-#
-# Attributes
-# ----------
-#
-#   :domain - [required] The domain name for the site
-#   :server_type - Currently only supports "gunicorn"
-#   :user - The user that will own the directories and virtualenv
-#   :group - The group assigned to the directories and virtualenv
-#   :mode - The mode used for directories and the virtualenv
-#   :path - The path to use for the site
-#   :venv - The virtualenv to install packages to
-#   :packages - A hash of packages to install with pip
-#   :requirements - The optional requirements file to install with pip
-#
 
 directory node[:django][:virtualenvs] do
   owner node[:sites][:user]
