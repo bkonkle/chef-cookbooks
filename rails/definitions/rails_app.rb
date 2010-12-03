@@ -17,6 +17,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
       recursive true
       action :create
     end
+  end
   
   template "#{path}/shared/config/database.yaml" do
     source "database.yml.erb"
