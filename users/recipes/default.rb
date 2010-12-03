@@ -55,22 +55,22 @@ node[:users].each_pair do |name, info|
     mode "0644"
   end
   
-  cookbook_file "#{home_dir}/.profile" do
-    source "profile"
+  template "#{home_dir}/.profile" do
+    source "profile.erb"
     owner name
     group info[:gid] || name
     mode "0644"
   end
 
-  cookbook_file "/home/#{name}/.bashrc" do
-    source "bashrc"
+  template "/home/#{name}/.bashrc" do
+    source "bashrc.erb"
     owner name
     group info[:gid] || name
     mode "0644"
   end
 
-  cookbook_file "/home/#{name}/.bash_logout" do
-    source "bash_logout"
+  template "/home/#{name}/.bash_logout" do
+    source "bash_logout.erb"
     owner name
     group info[:gid] || name
     mode "0644"

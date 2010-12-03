@@ -4,7 +4,8 @@ include_recipe "users"
 include_recipe "sudo"
 
 BASE_PACKAGES = ["git-core", "bash-completion", "emacs23-nox", "postfix",
-                 "bsd-mailx", "build-essential", "python-software-properties"]
+                 "bsd-mailx", "build-essential", "python-software-properties",
+                 "ntp"]
 
 case node[:platform]
 when "ubuntu", "debian"
