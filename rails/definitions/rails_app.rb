@@ -9,7 +9,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
   path = (params[:path] or "#{sites_dir}/#{params[:name]}")
   
   # Create necessary directories all at once
-  %w{config logs pids system}.each do |dir|
+  %w{config log pids system}.each do |dir|
     directory "#{path}/shared/#{dir}" do
       owner params[:user]
       group grp
@@ -19,7 +19,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
     end
   end
   
-  template "#{path}/shared/config/database.yaml" do
+  template "#{path}/shared/config/database.yml" do
     source "database.yaml.erb"
     cookbook "rails"
     owner params[:user]
