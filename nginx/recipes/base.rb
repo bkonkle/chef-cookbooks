@@ -1,3 +1,6 @@
+# The base Nginx configuration, to be included after installing Nginx with all
+# desired compile options and modules.
+
 service "nginx" do
   enabled true
   running true
@@ -11,4 +14,10 @@ cookbook_file "/etc/nginx/nginx.conf" do
   owner "root"
   group "root"
   notifies :restart, resources(:service => "nginx")
+end
+
+directory node[:sites][:dir] do
+  owner node[:sites][:user]
+  group node[:sites][:group]
+  mode node[:sites][:mode]
 end
