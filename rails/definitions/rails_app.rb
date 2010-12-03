@@ -20,7 +20,8 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
   end
   
   template "#{path}/shared/config/database.yaml" do
-    source "database.yml.erb"
+    source "database.yaml.erb"
+    cookbook "rails"
     owner params[:user]
     group grp
     mode params[:mode]
