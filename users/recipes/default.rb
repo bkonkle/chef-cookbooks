@@ -1,78 +1,78 @@
 groups = Hash.new
 
-node[:users].each_pair do |username, user|
-  shell = (user[:shell] or "/bin/bash")
+node[:users].each_pair do |name, info|
+  shell = (info[:shell] or "/bin/bash")
   
-  user[:groups].each do |group|
+  info[:groups].each do |group|
     if groups[group]
-      unless groups[group].include?(username)
-        groups[group] = groups[group].push(username)
+      unless groups[group].include?(name)
+        groups[group] = groups[group].push(name)
       end
     else
-      groups[group] = [username]
+      groups[group] = [name]
     end
   end
   
-  home_dir = "/home/#{username}"
+  home_dir = "/home/#{name}"
 
-  user username do
-    uid user[:uid]
-    gid user[:uid]
+  user name do
+    uid info[:uid]
+    gid info[:uid]
     shell shell
-    comment user[:full_name]
+    comment info[:full_name]
     supports :manage_home => true
     home home_dir
   end
   
-  group username do
-    gid user[:uid]
+  group name do
+    gid info[:uid]
   end
 
   directory "#{home_dir}/.ssh" do
-    owner username
-    group user[:gid] || username
+    owner name
+    group info[:gid] || name
     mode "0700"
   end
 
   file "#{home_dir}/.ssh/authorized_keys" do
-    content user[:ssh_keys]
-    owner username
-    group user[:gid] || username
+    content info[:ssh_keys]
+    owner name
+    group info[:gid] || name
     mode "0600"
   end
   
   file "#{home_dir}/.ssh/id_rsa" do
-    content user[:id_rsa]
-    owner username
-    group user[:gid] || username
+    content info[:id_rsa]
+    owner name
+    group info[:gid] || name
     mode "0600"
   end
   
   file "#{home_dir}/.ssh/id_rsa.pub" do
-    content user[:id_rsa_pub]
-    owner username
-    group user[:gid] || username
+    content info[:id_rsa_pub]
+    owner name
+    group info[:gid] || name
     mode "0644"
   end
   
   cookbook_file "#{home_dir}/.profile" do
     source "profile"
-    owner username
-    group user[:gid] || username
+    owner name
+    group info[:gid] || name
     mode "0644"
   end
 
-  cookbook_file "/home/#{username}/.bashrc" do
+  cookbook_file "/home/#{name}/.bashrc" do
     source "bashrc"
-    owner username
-    group user[:gid] || username
+    owner name
+    group info[:gid] || name
     mode "0644"
   end
 
-  cookbook_file "/home/#{username}/.bash_logout" do
+  cookbook_file "/home/#{name}/.bash_logout" do
     source "bash_logout"
-    owner username
-    group user[:gid] || username
+    owner name
+    group info[:gid] || name
     mode "0644"
   end
 end
