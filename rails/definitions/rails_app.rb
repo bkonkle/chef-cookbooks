@@ -45,7 +45,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
       before_migrate do
         execute "installing required gems" do
           command "sudo rake gems:install"
-          cwd path
+          cwd release_path
         end
       end
       environment "RAILS_ENV" => node[:rails][:environment]
