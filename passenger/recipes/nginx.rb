@@ -1,10 +1,11 @@
 include_recipe "passenger"
 
+gems_dir = node[:languages][:ruby][:gems_dir]
 nginx_path = node[:nginx][:source_path]
 nginx_ver = node[:nginx][:version]
 nginx_src = "#{nginx_path}/nginx-#{nginx_ver}"
-gems_dir = node[:languages][:ruby][:gems_dir]
-passenger_root = `#{gems_dir}/bin/passenger-config --root`.strip()
+passenger_ver = node[:passenger][:version]
+passenger_root = "#{gems_dir}/gems/passenger-#{passenger_ver}"
 
 unless File.directory?(nginx_path)
   begin

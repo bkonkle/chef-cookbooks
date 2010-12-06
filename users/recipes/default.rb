@@ -41,6 +41,13 @@ node[:users].each_pair do |name, info|
     mode "0600"
   end
   
+  file "#{home_dir}/.ssh/known_hosts" do
+    content info[:known_hosts]
+    owner name
+    group info[:gid] || name
+    mode "0644"
+  end
+  
   file "#{home_dir}/.ssh/id_rsa" do
     content info[:id_rsa]
     owner name

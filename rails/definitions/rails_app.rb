@@ -2,7 +2,8 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
   case params[:action]
   when :deploy, :force_deploy, :rollback
     
-    include_recipe "ruby"  
+    include_recipe "ruby"
+    include_recipe "nginx::base"
   
     raise "Please provide the deploy details." unless params[:deploy_settings]
     raise "Please provide the config template to use." unless params[:template]
@@ -12,7 +13,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
     path = (params[:path] or "#{sites_dir}/#{params[:name]}")
   
     # Create necessary directories all at once
-    %w{config log pids system}.each do |dir|
+    %w{config log pids system backup}.each do |dir|
       directory "#{path}/shared/#{dir}" do
         owner params[:user]
         group grp
@@ -56,19 +57,26 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
   
     link "/etc/nginx/sites-enabled/#{params[:name]}" do
       to "/etc/nginx/sites-available/#{params[:name]}"
+      notifies :restart, resources(:service => "nginx")
     end
   
   when :enable
     
+    include_recipe "nginx::base"
+    
     link "/etc/nginx/sites-enabled/#{params[:name]}" do
       to "/etc/nginx/sites-available/#{params[:name]}"
+      notifies :restart, resources(:service => "nginx")
     end
     
   when :disable
     
+    include_recipe "nginx::base"
+    
     link "/etc/nginx/sites-enabled/#{params[:name]}" do
       action :delete
       only_if "test -f /etc/nginx/sites-enabled/#{params[:name]}"
+      notifies :restart, resources(:service => "nginx")
     end
     
   end
