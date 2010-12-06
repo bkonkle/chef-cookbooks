@@ -9,7 +9,7 @@ service "nginx" do
 end
 
 template "/etc/nginx/nginx.conf" do
-  source "nginx.conf"
+  source "nginx.conf.erb"
   mode 0644
   owner "root"
   group "root"
