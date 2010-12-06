@@ -8,7 +8,7 @@ service "nginx" do
   action [:start, :enable]
 end
 
-cookbook_file "/etc/nginx/nginx.conf" do
+template "/etc/nginx/nginx.conf" do
   source "nginx.conf"
   mode 0644
   owner "root"
