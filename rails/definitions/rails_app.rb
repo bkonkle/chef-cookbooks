@@ -52,6 +52,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
       params[:deploy_settings].each_pair do |func_name, param_value|
         send(func_name, param_value)
       end
+      notifies :restart, resources(:service => "nginx")
     end
   
     template "/etc/nginx/sites-available/#{params[:name]}" do
