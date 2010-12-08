@@ -52,7 +52,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
     
     execute "installing required gems" do
       command "sudo rake gems:install"
-      cwd release_path
+      cwd "#{path}/current"
       action :nothing
     end
   
