@@ -47,6 +47,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
         send(func_name, param_value)
       end
       notifies :run, "execute[installing required gems]"
+      notifies :restart, resources(:service => "nginx")
     end
     
     execute "installing required gems" do
