@@ -42,17 +42,18 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
       group grp
       action params[:action]
       migration_command "rake db:migrate"
-      before_migrate do
-        execute "installing required gems" do
-          command "sudo rake gems:install"
-          cwd release_path
-        end
-      end
       environment "RAILS_ENV" => node[:rails][:environment]
       params[:deploy_settings].each_pair do |func_name, param_value|
         send(func_name, param_value)
       end
+      notifies :run, "execute[installing required gems]"
       notifies :restart, resources(:service => "nginx")
+    end
+    
+    execute "installing required gems" do
+      command "sudo rake gems:install"
+      cwd "#{path}/current"
+      action :nothing
     end
   
     template "/etc/nginx/sites-available/#{params[:name]}" do
