@@ -51,7 +51,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
     end
     
     execute "installing required gems" do
-      command "RAILS_ENV=#{node[:rails][:environment]} sudo rake gems:install"
+      command "sudo rake gems:install RAILS_ENV=#{node[:rails][:environment]}"
       cwd "#{path}/current"
       action :nothing
       ignore_failure true
