@@ -54,6 +54,7 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
       command "sudo rake gems:install"
       cwd "#{path}/current"
       action :nothing
+      ignore_failure true
     end
   
     template "/etc/nginx/sites-available/#{params[:name]}" do
