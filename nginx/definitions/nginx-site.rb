@@ -11,6 +11,7 @@ define :nginx_site, :action => :enable do
       owner "root"
       group "root"
       mode "0644"
+      notifies :restart, resources(:service => "nginx")
     end
   
     link "/etc/nginx/sites-enabled/#{params[:name]}" do

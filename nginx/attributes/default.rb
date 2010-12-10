@@ -1,6 +1,5 @@
 include_attribute "users"
 
-default[:nginx][:version] = "0.7.67"
 default[:nginx][:conf_dir] = "/etc/nginx/conf.d"
 default[:nginx][:worker_connections] = 1024
 
