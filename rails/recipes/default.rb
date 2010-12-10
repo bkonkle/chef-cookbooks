@@ -19,6 +19,8 @@
 
 include_recipe "ruby"
 
+package "rake"
+
 %w{ rails actionmailer actionpack activerecord activesupport activeresource }.each do |rails_gem|
   gem_package rails_gem do
     if node[:rails][:version]
