@@ -1,9 +1,20 @@
-# Example:
+# Examples:
+#
+#   ufw_rule "Allow SSH connections" do
+#     action :allow
+#     port 22
+#   end
+#
 #   ufw_rule "Allow Postgres connections from app server" do
 #     action :allow
 #     port 5432
 #     protocol "tcp"
 #     from "10.0.0.100"
+#   end
+#
+#   ufw_rule "Set default firewall action" do
+#     action :deny
+#     default true
 #   end
 
 define :ufw_rule, :default => false do
