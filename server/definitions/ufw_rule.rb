@@ -17,38 +17,48 @@
 #     default true
 #   end
 
-define :ufw_rule, :default => false do
+define :ufw_rule, :default => false, :delete => false do
   include_recipe "server::security"
   
-  if not [:allow, :deny].include?(params[:action])
-    raise "Please provide a valid action for the rule, either allow or deny."
-  end
+  case params[:action]
+  when :allow, :deny
   
-  if params[:default]
-    execute "ufw default #{params[:action]}" do
-      user "root"
-    end
-  else
-
-    # Build the command
-    rule_cmd = "ufw #{params[:action]} "
-    if params[:from]
-      rule_cmd += "from #{params[:from]} "
-      if params[:protocol]
-        rule_cmd += "to #{params[:to]} port "
+    if params[:default]
+      execute "ufw default #{params[:action]}" do
+        user "root"
       end
-    end
-    if params[:port]
-      rule_cmd += "#{params[:port]}"
-    end
-    if params[:protocol] and not params[:from]
-      rule_cmd += "/#{params[:protocol]}"
-    end
+    else
+
+      # Build the command
+      rule_cmd = "ufw "
+      rule_cmd += "delete " if params[:delete]
+      rule_cmd += "#{params[:action]} "
+      if params[:from]
+        rule_cmd += "from #{params[:from]} "
+        rule_cmd += "to #{params[:to]} port " if params[:protocol]
+      end
+      rule_cmd += "#{params[:port]}" if params[:port]
+      if params[:protocol] and not params[:from]
+        rule_cmd += "/#{params[:protocol]}"
+      end
     
-    # Execute it
-    execute rule_cmd  do
+      # Execute it
+      execute rule_cmd  do
+        user "root"
+      end
+      
+      # Make sure ufw is enabled
+      execute "ufw enable" do
+        user "root"
+      end
+    
+    end
+  
+  when :disable
+    
+    execute "ufw disable" do
       user "root"
     end
-    
-  end  
+  
+  end
 end
