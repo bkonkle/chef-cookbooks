@@ -41,15 +41,17 @@ define :ufw_rule, :default => false, :delete => false do
       if params[:protocol] and not params[:from]
         rule_cmd += "/#{params[:protocol]}"
       end
-    
-      # Execute it
-      execute rule_cmd  do
-        user "root"
-      end
       
       # Make sure ufw is enabled
       execute "yes | ufw enable" do
         user "root"
+        only_if 'test "`ufw status`" = "Status: inactive"'
+      end
+      
+      # Execute it
+      execute rule_cmd  do
+        user "root"
+        notifies :reload, resources(:service => "ufw"), immediately
       end
     
     end
