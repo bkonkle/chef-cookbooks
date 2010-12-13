@@ -21,16 +21,16 @@ define :ufw_rule, :default => false do
 
     # Build the command
     rule_cmd = "ufw #{params[:action]} "
-    if params.has_key?('from')
+    if params[:from]
       rule_cmd += "from #{params[:from]} "
-      if params.has_key?('protocol')
+      if params[:protocol]
         rule_cmd += "to #{params[:to]} port "
       end
     end
-    if params.has_key?('port')
+    if params[:port]
       rule_cmd += "#{params[:port]}"
     end
-    if params.has_key?('protocol') and not params.has_key?('from')
+    if params[:protocol] and not params[:from]
       rule_cmd += "/#{params[:protocol]}"
     end
     
