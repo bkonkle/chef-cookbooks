@@ -1,5 +1,7 @@
 include_recipe "passenger"
 
+package "rake" # Required in order to build the package
+
 gems_dir = node[:languages][:ruby][:gems_dir]
 nginx_path = node[:nginx][:source_path]
 nginx_ver = node[:nginx][:version]
