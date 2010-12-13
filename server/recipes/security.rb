@@ -1,5 +1,6 @@
 package "ufw" do
     :upgrade
+end
 
 service "ufw" do
   enabled true
