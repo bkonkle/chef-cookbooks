@@ -9,7 +9,7 @@
 define :ufw_rule, :default => false do
   include_recipe "server::security"
   
-  if not [:allow, :deny].include?(params[:action])?
+  if not [:allow, :deny].include?(params[:action])
     raise "Please provide a valid action for the rule, either allow or deny."
   end
   
