@@ -48,7 +48,7 @@ define :ufw_rule, :default => false, :delete => false do
       end
       
       # Make sure ufw is enabled
-      execute "ufw enable" do
+      execute "yes | ufw enable" do
         user "root"
       end
     
