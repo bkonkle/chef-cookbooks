@@ -42,7 +42,6 @@ define :ufw_rule, :default => false, :delete => false do
     # Execute it
     execute rule_cmd  do
       user "root"
-      notifies :reload, resources(:service => "ufw"), :immediately
     end
   
   end
