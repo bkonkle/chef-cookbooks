@@ -1,0 +1,45 @@
+from fabric.api import cd, env, local, run, sudo, settings
+
+env.user = 'myuser'
+env.roledefs = {
+    'prod': ['myserver', 'myotherserver'],
+    'dev': ['mydevserver'],
+}
+env.server_roles = {}
+for role, servers in env.roledefs.items():
+    for server in servers:
+        env.server_roles[server] = role
+
+env.chef_executable = '/var/lib/gems/1.8/bin/chef-solo'
+env.cookbook_repo = 'git://github.com/bkonkle/chef-cookbooks.git'
+
+# Default to the dev role if no role was specified
+if not env.get('roles') and not env.get('hosts'):
+    env.roles = ['dev']
+
+def bootstrap():
+    with settings(user='root'):
+        # Install the necessary packages
+        run('apt-get update')
+        run('apt-get -y dist-upgrade')
+        run('apt-get install -y git-core rubygems ruby ruby-dev')
+        run('gem install --no-rdoc --no-ri chef')
+        
+        # Go ahead and run a deploy as root, which will set up the initial
+        # users of the system.
+        local('rsync -avz . root@%s:/etc/chef' % env.host)
+        run('git clone %s /etc/chef/cookbooks' % env.cookbook_repo)
+        run('%s -j /etc/chef/nodes/%s.json' % (env.chef_executable, env.host))
+
+def sync_config():
+    # To enable deploy without knowing the root password, the config is first
+    # synced with 
+    local('rsync -az --delete ./ %s@%s:~/.chefconfig/' % (env.user, env.host))
+    sudo('rsync -az ~/.chefconfig/ /etc/chef/')
+    sudo('sudo chown -R root:root /etc/chef/')
+    with cd("/etc/chef/cookbooks"):
+        sudo('git reset --hard && git pull')
+
+def deploy():
+    sync_config()
+    sudo('%s -j /etc/chef/nodes/%s.json' % (env.chef_executable, env.host))
