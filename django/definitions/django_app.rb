@@ -48,15 +48,18 @@ define :django_app, :action => :deploy, :user => "root", :mode => "0755",
     action :sync
   end
   
-  # When passing params to another definition, things get crazy without this
+  # Avoid passing the params object directly to another custom definition - it
+  # seems to cause problems.
   owner = params[:user]
+  mode = params[:mode]
+  packages = params[:packages]
   
   virtualenv params[:name] do
     path venv
     owner owner
     group group
-    mode params[:mode]
-    packages params[:packages]
+    mode mode
+    packages packages
     requirements requirements
   end
 end
