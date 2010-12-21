@@ -41,8 +41,8 @@ define :django_app, :action => :deploy, :user => "root", :mode => "0755",
   end
   
   git "#{path}/code" do
-    repository site[:repo]
-    revision site[:revision]
+    repository params[:deploy_settings][:repo]
+    revision params[:deploy_settings][:revision]
     user params[:user]
     group group
     action :sync
