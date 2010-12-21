@@ -48,7 +48,7 @@ define :django_app, :action => :deploy, :user => "root", :mode => "0755",
     action :sync
   end
 
-  virtualenv name do
+  virtualenv params[:name] do
     path venv
     owner params[:user]
     group group
