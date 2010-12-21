@@ -28,8 +28,15 @@ def bootstrap():
         # Go ahead and run a deploy as root, which will set up the initial
         # users of the system.
         local('rsync -avz . root@%s:/etc/chef' % env.host)
-        with settings(warn_only=True):
+        
+        # If the /etc/chef/cookbooks directory already exists, then make sure
+        # the cookbook repo is up to date.  Otherwise, clone it.
+        if run('test -d /etc/chef/cookbooks').return_code == 0:
+            with cd('/etc/chef/cookbooks'):
+                run('git reset --hard && git pull')
+        else:
             run('git clone %s /etc/chef/cookbooks' % env.cookbook_repo)
+        
         run('%s -j /etc/chef/nodes/%s.json' % (env.chef_executable, env.host))
 
 def sync_config():
