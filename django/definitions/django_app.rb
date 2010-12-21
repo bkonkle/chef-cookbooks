@@ -47,10 +47,13 @@ define :django_app, :action => :deploy, :user => "root", :mode => "0755",
     group group
     action :sync
   end
-
+  
+  # When passing params to another definition, things get crazy without this
+  owner = params[:user]
+  
   virtualenv params[:name] do
     path venv
-    owner params[:user]
+    owner owner
     group group
     mode params[:mode]
     packages params[:packages]
