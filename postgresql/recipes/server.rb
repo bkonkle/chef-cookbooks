@@ -17,8 +17,16 @@ POSTGRES_PACKAGES.each do |pkg|
   end
 end
 
+if node[:platform] == "ubuntu" and node[:platform_version].to_f >= 10.10
+  # The version number was removed in Maverick
+  postgresql_service = "postgresql"
+else
+  postgresql_service = "postgresql-#{node[:postgresql][:version]}"
+end
+  
+
 service "postgresql" do
-  service_name "postgresql-#{node[:postgresql][:version]}"
+  service_name postgresql_service
   supports :restart => true, :status => true, :reload => true
   action :nothing
 end
@@ -37,4 +45,35 @@ template "#{node[:postgresql][:dir]}/postgresql.conf" do
   group "postgres"
   mode 0600
   notifies :restart, resources(:service => "postgresql")
+end
+
+unless Chef::Config[:solo]
+  ruby_block "save node data" do
+    block do
+      node.save
+    end
+    action :create
+  end
+end
+
+grants_path = "/etc/postgresql/#{node[:postgresql][:version]}/main/grants.sql"
+
+begin
+  t = resources(:template => grants_path)
+rescue
+  Chef::Log.debug("Could not find previously defined grants.sql resource")
+  t = template grants_path do
+    path grants_path
+    source "grants.sql.erb"
+    owner "root"
+    group "root"
+    mode "0600"
+    action :create
+  end
+end
+
+execute "postgresql-install-privileges" do
+  command "sudo -u postgres psql < #{grants_path}"
+  action :nothing
+  subscribes :run, resources(:template => grants_path), :immediately
 end
