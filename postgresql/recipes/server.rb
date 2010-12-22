@@ -56,6 +56,8 @@ unless Chef::Config[:solo]
   end
 end
 
+# Create users and grant privelages using the grants.sql template
+
 grants_path = "/etc/postgresql/#{node[:postgresql][:version]}/main/grants.sql"
 
 begin
