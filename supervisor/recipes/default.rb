@@ -10,5 +10,5 @@ end
 service "supervisor" do
   supports :status => true, :restart => true, :reload => true
   reload_command "supervisorctl update"
-  action [:enable, :start]
+  action :enable
 end
