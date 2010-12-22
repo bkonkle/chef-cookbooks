@@ -22,6 +22,7 @@ define :supervisor_program, :autostart => true do
     owner "root"
     group "root"
     mode "0644"
+    cookbook "supervisor"
     variables :name => params[:name],
       :command => params[:command],
       :directory => params[:directory],
