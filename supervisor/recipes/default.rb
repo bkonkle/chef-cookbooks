@@ -1,7 +1,7 @@
 package "supervisor"
 
 cookbook_file "/etc/supervisor/supervisord.conf" do
-  source "supervisord.conf.erb"
+  source "supervisord.conf"
   owner "root"
   group "root"
   mode "0644"
