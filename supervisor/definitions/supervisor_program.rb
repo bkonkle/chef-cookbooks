@@ -1,4 +1,4 @@
-define :supervisor_program, :autostart => true, do
+define :supervisor_program, :autostart => true do
   include_recipe "supervisor"
   
   if params[:exitcodes]
