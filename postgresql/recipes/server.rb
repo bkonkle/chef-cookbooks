@@ -73,7 +73,7 @@ rescue
 end
 
 execute "postgresql-install-privileges" do
-  command "sudo -u postgres psql < #{grants_path}"
+  command "cat #{grants_path} | sudo -u postgres psql"
   action :nothing
   subscribes :run, resources(:template => grants_path), :immediately
 end

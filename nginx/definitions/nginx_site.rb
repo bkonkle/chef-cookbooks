@@ -1,8 +1,8 @@
 define :nginx_site, :action => :enable do
+  include_recipe "nginx::base"
+  
   case params[:action]
   when :enable
-    
-    include_recipe "nginx::base"
   
     raise "Please provide the config template to use." unless params[:template]
   
@@ -20,8 +20,6 @@ define :nginx_site, :action => :enable do
     end
   
   when :disable
-    
-    include_recipe "nginx::base"
     
     link "/etc/nginx/sites-enabled/#{params[:name]}" do
       action :delete
