@@ -19,7 +19,7 @@ define :supervisor_program, :autostart => true do
   
   template "/etc/supervisor/conf.d/#{params[:name]}.conf" do
     source "program.conf.erb"
-    user "root"
+    owner "root"
     group "root"
     mode "0644"
     variables :name => params[:name],
