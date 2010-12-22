@@ -17,7 +17,7 @@ define :supervisor_program, :autostart => true do
     environment = nil
   end
   
-  template "/etc/supervisor/conf.d/#{params[:name].conf}" do
+  template "/etc/supervisor/conf.d/#{params[:name]}.conf" do
     source "program.conf.erb"
     user "root"
     group "root"
