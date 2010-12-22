@@ -1,0 +1,13 @@
+[program:<%= @name %>]
+command=<%= @command %>
+<% if @directory %>directory=<%= @directory %><% end %>
+<% if @user %>user=<%= @user %><% end %>
+<% if not @autostart %>autostart=false<% end %>
+<% if @autorestart %>autorestart=<%= @autorestart %><% end %>
+<% if @exitcodes %>exitcodes=<%= @exitcodes %><% end %>
+<% if @startretries %>startretries=<%= @startretries %><% end %>
+<% if @environment %>environment=<%= @environment %><% end %>
+<% if @stdout_logfile %>stdout_logfile=<%= @stdout_logfile %><% end %>
+<% if @stderr_logfile %>stderr_logfile=<%= @stderr_logfile %><% end %>
+<% if @redirect_stderr %>redirect_stderr=true<% end %>
+<% if @stopsignal %>stopsignal=<%= @stopsignal %><% end %>

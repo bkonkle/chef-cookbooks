@@ -11,3 +11,8 @@ directory node[:django][:virtualenvs] do
   group node[:sites][:group]
   mode node[:sites][:mode]
 end
+
+if node[:django][:app_server] == "gunicorn"
+  # Nginx can be used with Gunicorn without compiling a module
+  include_recipe "nginx"
+end

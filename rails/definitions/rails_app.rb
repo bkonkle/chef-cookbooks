@@ -32,6 +32,13 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
     })
   end
 
+  execute "install required gems" do
+    command "sudo rake gems:install RAILS_ENV=#{node[:rails][:environment]}"
+    cwd "#{path}/current"
+    action :nothing
+    ignore_failure true
+  end
+
   deploy_revision path do
     user params[:user]
     group grp
@@ -41,13 +48,6 @@ define :rails_app, :action => :deploy, :user => "root", :mode => "0755" do
     params[:deploy_settings].each_pair do |func_name, param_value|
       send(func_name, param_value)
     end
-    notifies :run, "execute[installing required gems]"
-  end
-  
-  execute "installing required gems" do
-    command "sudo rake gems:install RAILS_ENV=#{node[:rails][:environment]}"
-    cwd "#{path}/current"
-    action :nothing
-    ignore_failure true
+    notifies :run, resources(:execute => "install required gems")
   end
 end
