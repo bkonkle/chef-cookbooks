@@ -17,6 +17,8 @@ POSTGRES_PACKAGES.each do |pkg|
   end
 end
 
+gem_package "pg"
+
 if node[:platform] == "ubuntu" and node[:platform_version].to_f >= 10.10
   # The version number was removed in Maverick
   postgresql_service = "postgresql"
