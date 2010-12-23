@@ -63,3 +63,6 @@ else
 
   r.run_action(:install)
 end
+
+Gem.clear_paths
+require "mysql"
