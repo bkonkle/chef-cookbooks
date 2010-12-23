@@ -1,7 +1,7 @@
 begin
   require 'pg'
 rescue LoadError
-  Chef::Log.warn("Missing gem 'pg'")
+  Chef::Log.debug("Missing gem 'pg'")
 end
 
 module PostgreSQL
@@ -9,7 +9,7 @@ module PostgreSQL
     def db
       @@db ||= ::PGconn.new(
         :host => new_resource.host,
-        :port => new_resouce.port,
+        :port => new_resource.port,
         :user => new_resource.username,
         :password =>new_resource.password
       )
