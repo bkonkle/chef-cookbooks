@@ -2,7 +2,7 @@ include PostgreSQL::Database
 
 action :create_db do
   unless @pgsqldb.exists
-    Chef::Log.info "pgsql_database: Creating database #{new_resource.database}"
+    Chef::Log.info "postgresql_database: Creating database #{new_resource.database}"
     db.query("create database #{new_resource.database}")
     new_resource.updated_by_last_action(true)
   end
