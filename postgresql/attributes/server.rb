@@ -1,5 +1,3 @@
-::Chef::Node.send(:include, Opscode::OpenSSL::Password)
-
 default[:postgresql][:version] = "8.4"
 default[:postgresql][:listen_addresses] = "localhost"
 default[:postgresql][:port] = 5432
@@ -10,7 +8,10 @@ default[:postgresql][:work_mem] = "1MB"
 default[:postgresql][:checkpoint_segments] = 3
 default[:postgresql][:effective_cache_size] = "128MB"
 
-default[:mysql][:server_root_password] = secure_password
+unless Chef::Config[:solo]
+  ::Chef::Node.send(:include, Opscode::OpenSSL::Password)
+  default[:postgresql][:server_root_password] = secure_password
+do
 
 case platform
 when "debian"

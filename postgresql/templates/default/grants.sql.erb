@@ -2,4 +2,6 @@
 -- Local modifications will be overwritten.
 
 -- Set the server root password. This should be preseeded by the package installation.
+<% if node[:postgresql][:server_root_password] %>
 ALTER ROLE postgres WITH ENCRYPTED PASSWORD '<%= node[:postgresql][:server_root_password] %>';
+<% end %>
