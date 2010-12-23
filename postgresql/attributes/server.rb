@@ -11,7 +11,7 @@ default[:postgresql][:effective_cache_size] = "128MB"
 unless Chef::Config[:solo]
   ::Chef::Node.send(:include, Opscode::OpenSSL::Password)
   default[:postgresql][:server_root_password] = secure_password
-do
+end
 
 case platform
 when "debian"
