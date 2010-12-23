@@ -1,8 +1,5 @@
 include_recipe "postgresql::client"
 
-POSTGRES_PACKAGES = ['postgresql', 'postgresql-server-dev-%s',
-                     'postgresql-contrib-%s', 'libpq-dev']
-
 if node[:postgresql][:version] == "9.0"
   # Add the needed PPA if PostgreSQL 9.0 is desired
   execute "add-apt-repository" do
@@ -11,13 +8,11 @@ if node[:postgresql][:version] == "9.0"
   end
 end
 
-POSTGRES_PACKAGES.each do |pkg|
+%w{postgresql postgresql-server-dev-%s postgresql-contrib-%s}.each do |pkg|
   package pkg % node[:postgresql][:version] do
     action :upgrade
   end
 end
-
-gem_package "pg"
 
 if node[:platform] == "ubuntu" and node[:platform_version].to_f >= 10.10
   # The version number was removed in Maverick
