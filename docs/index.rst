@@ -10,9 +10,9 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-   :glob:
    
-   *
+   gettingstarted
+   nextsteps
 
 Indices and tables
 ==================
