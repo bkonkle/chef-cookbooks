@@ -10,5 +10,8 @@ Many of these cookbooks came from the [Opscode repository][1], but they have
 all been heavily modified.  Some of the ideas came from Eric Holscher's great
 [blog posts][2] about using Chef with Django.
 
+Read the documentation [here][3].
+
 [1]: https://github.com/opscode/cookbooks
 [2]: http://ericholscher.com/blog/2010/nov/8/building-django-app-server-chef/
+[3]: http://bkonkle.github.com/chef-cookbooks/
