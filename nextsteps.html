@@ -1,0 +1,356 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Next Steps &mdash; chef-cookbooks v0.1 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="chef-cookbooks v0.1 documentation" href="index.html" />
+    <link rel="prev" title="Getting Started" href="gettingstarted.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="gettingstarted.html" title="Getting Started"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">chef-cookbooks v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="next-steps">
+<h1>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="roles">
+<h2>Roles<a class="headerlink" href="#roles" title="Permalink to this headline">¶</a></h2>
+<p>The next step in a basic configuration is the definition of roles. Roles
+describe your application servers, load balancers, utility servers, database
+servers, etc. Instead of defining things like your users and groups in your
+node config, you&#8217;ll want to set this up in your roles.</p>
+<div class="section" id="the-default-role">
+<h3>The Default Role<a class="headerlink" href="#the-default-role" title="Permalink to this headline">¶</a></h3>
+<p>The first role you&#8217;ll want to create is your default role, which will handle
+configuration that you want to be uniform across all of your nodes.  This often
+includes things like an admin group, or a deploy user.</p>
+<p>Create a directory called <em>roles</em> inside of <em>deploy</em>.  Then create a
+<em>default.rb</em> file inside the folder that looks like this:</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="nb">name</span> <span class="s1">&#39;default&#39;</span>
+<span class="n">description</span> <span class="s1">&#39;Default role for myapp servers.&#39;</span>
+<span class="n">run_list</span> <span class="s2">&quot;recipe[server]&quot;</span>
+
+<span class="n">default_attributes</span> <span class="s2">&quot;hosts&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s2">&quot;myloadbalancer&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s2">&quot;external_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;123.45.67.89&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;internal_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;10.0.1.101&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;myappserver&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s2">&quot;external_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;123.45.67.90&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;internal_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;10.0.1.102&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;mydbserver&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s2">&quot;external_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;123.45.67.91&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;internal_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;10.0.1.103&quot;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+
+  <span class="c1"># Settings for the sites directory</span>
+  <span class="s2">&quot;sites&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s2">&quot;user&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;myuser&quot;</span>
+  <span class="p">},</span>
+
+  <span class="c1"># User settings</span>
+  <span class="s2">&quot;users&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s2">&quot;myuser&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s2">&quot;full_name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;My User&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;groups&quot;</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;admin&quot;</span><span class="o">]</span><span class="p">,</span>
+      <span class="s2">&quot;ssh_keys&quot;</span> <span class="o">=&gt;</span> <span class="o">&lt;&lt;-</span><span class="no">SSHKEYS</span><span class="p">,</span>
+<span class="sh">ssh-rsa AAAAB3NzaC1y...xdo/5PPnUQ== my@developer.com</span>
+<span class="sh">ssh-rsa AAAAB3NzaC1y...flF7RVqcOw== my@other-developer.com</span>
+<span class="no">SSHKEYS</span>
+      <span class="s2">&quot;known_hosts&quot;</span> <span class="o">=&gt;</span> <span class="o">&lt;&lt;-</span><span class="no">KNOWNHOSTS</span><span class="p">,</span>
+<span class="sh">|1|Dst7mFzjY0EHw8TAH5Nex1zazkk=|RxuJRJeP+67DHpXqbdVZwUyQMo4= ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==</span>
+<span class="sh">|1|XeNMOWERxlFocwZvuoklfzksYis=|85YCezd9rVsLkVnm24FcMv4Iqs4= ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==</span>
+<span class="no">KNOWNHOSTS</span>
+      <span class="s2">&quot;id_rsa_pub&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;ssh-rsa AAAAB3NzaC1y...6BBykJ/Q== server@myapp.com&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;id_rsa&quot;</span> <span class="o">=&gt;</span> <span class="o">&lt;&lt;-</span><span class="no">RSAKEY</span>
+<span class="sh">-----BEGIN RSA PRIVATE KEY-----</span>
+<span class="sh">R5kEi5fP2fXRHsrf7erjT5CTkSCD1/+1Wnf9Rg2n69U+ustph2ETYgZ+cAWeju56</span>
+<span class="sh">zKgbXhSwIWNVgHu3S0WnsxfOJH9IOG25/pdj4sUfMuqUNcWhNbhJmF0z15j4EulZ</span>
+<span class="sh">...</span>
+<span class="sh">xgI3mkBqDlYZkvgoWEeZFiwVXS9T4PR1em0aExKlTpDsg+JL/oNNDn4+FzwlJzgY</span>
+<span class="sh">9B2iSVH0QAasA0tj1Z/34otxSBY7I5SFVK+Wjk28YIfmMCwxS1T7pz5HzNCabjce</span>
+<span class="sh">z89bOyUOj2hV347yM3sYIe5f4WQgeG</span>
+<span class="sh">-----END RSA PRIVATE KEY-----</span>
+<span class="no">RSAKEY</span>
+    <span class="p">},</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p>Let&#8217;s break this apart and look at it piece by piece.</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">run_list</span> <span class="s2">&quot;recipe[server]&quot;</span>
+
+<span class="n">default_attributes</span> <span class="s2">&quot;hosts&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s2">&quot;myloadbalancer&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s2">&quot;external_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;123.45.67.89&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;internal_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;10.0.1.101&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;myappserver&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s2">&quot;external_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;123.45.67.90&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;internal_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;10.0.1.102&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;mydbserver&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="s2">&quot;external_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;123.45.67.91&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;internal_ip&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;10.0.1.103&quot;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+</pre></div>
+</div>
+<p>The &#8216;run_list&#8217; at the top indicates that we want to run the <tt class="docutils literal"><span class="pre">server</span></tt> recipe.
+The &#8216;default_attributes&#8217; call defines a data structure that established some
+default values that can be overriden by other roles. The first section is
+&#8220;hosts&#8221;, which is handled by the <tt class="docutils literal"><span class="pre">server</span></tt> recipe. It creates a new
+<em>/etc/hosts</em> file containing the necessary definitions so that your servers
+know how to reach each other.</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="c1"># Settings for the sites directory</span>
+<span class="s2">&quot;sites&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="s2">&quot;user&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;myuser&quot;</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p>This will create a directory to hold your sites (located by default under
+/sites/).  It will set &#8220;myuser&#8221; as the owner.  Right now, this attribute is
+handled by the <tt class="docutils literal"><span class="pre">nginx</span></tt> recipe, but this may change in the future.  If you
+omit this attribute, then the directory will still be created by the Nginx
+recipe (if you include it, which we&#8217;ll cover later), and the owner will default
+to &#8216;root&#8217;.</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="c1"># User settings</span>
+<span class="s2">&quot;users&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="s2">&quot;myuser&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="s2">&quot;full_name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;My User&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;groups&quot;</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;admin&quot;</span><span class="o">]</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>The &#8220;users&#8221; attribute is handled by the <tt class="docutils literal"><span class="pre">users</span></tt> recipe (what a surprise!).
+In this case, a user will be created with the username &#8220;myuser&#8221;.  Any group
+added to any user in this attribute will cause that group to be created
+automatically by the <tt class="docutils literal"><span class="pre">users</span></tt> recipe.</p>
+<div class="highlight-ruby"><div class="highlight"><pre>      <span class="s2">&quot;ssh_keys&quot;</span> <span class="o">=&gt;</span> <span class="o">&lt;&lt;-</span><span class="no">SSHKEYS</span><span class="p">,</span>
+<span class="sh">ssh-rsa AAAAB3NzaC1y...xdo/5PPnUQ== my@developer.com</span>
+<span class="sh">ssh-rsa AAAAB3NzaC1y...flF7RVqcOw== my@other-developer.com</span>
+<span class="no">SSHKEYS</span>
+      <span class="s2">&quot;known_hosts&quot;</span> <span class="o">=&gt;</span> <span class="o">&lt;&lt;-</span><span class="no">KNOWNHOSTS</span><span class="p">,</span>
+<span class="sh">|1|Dst7mFzjY0EHw8TAH5Nex1zazkk=|RxuJRJeP+67DHpXqbdVZwUyQMo4= ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==</span>
+<span class="sh">|1|XeNMOWERxlFocwZvuoklfzksYis=|85YCezd9rVsLkVnm24FcMv4Iqs4= ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==</span>
+<span class="no">KNOWNHOSTS</span>
+</pre></div>
+</div>
+<p>The &#8220;ssh_keys&#8221; and &#8220;known_hosts&#8221; blocks use a Ruby notation called &#8220;here doc&#8221;
+to define values for the <em>authorized_keys</em> and <em>known_hosts</em> placed within the
+user&#8217;s <em>~/.ssh/</em> directory.</p>
+<div class="highlight-ruby"><div class="highlight"><pre>      <span class="s2">&quot;id_rsa_pub&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;ssh-rsa AAAAB3NzaC1y...6BBykJ/Q== server@myapp.com&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;id_rsa&quot;</span> <span class="o">=&gt;</span> <span class="o">&lt;&lt;-</span><span class="no">RSAKEY</span>
+<span class="sh">-----BEGIN RSA PRIVATE KEY-----</span>
+<span class="sh">R5kEi5fP2fXRHsrf7erjT5CTkSCD1/+1Wnf9Rg2n69U+ustph2ETYgZ+cAWeju56</span>
+<span class="sh">zKgbXhSwIWNVgHu3S0WnsxfOJH9IOG25/pdj4sUfMuqUNcWhNbhJmF0z15j4EulZ</span>
+<span class="sh">...</span>
+<span class="sh">xgI3mkBqDlYZkvgoWEeZFiwVXS9T4PR1em0aExKlTpDsg+JL/oNNDn4+FzwlJzgY</span>
+<span class="sh">9B2iSVH0QAasA0tj1Z/34otxSBY7I5SFVK+Wjk28YIfmMCwxS1T7pz5HzNCabjce</span>
+<span class="sh">z89bOyUOj2hV347yM3sYIe5f4WQgeG</span>
+<span class="sh">-----END RSA PRIVATE KEY-----</span>
+<span class="no">RSAKEY</span>
+    <span class="p">},</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p>If you&#8217;d like, you can also define &#8220;id_rsa&#8221; attributes so that you can give
+your user its own public/private key pair.</p>
+</div>
+<div class="section" id="targeted-roles">
+<h3>Targeted Roles<a class="headerlink" href="#targeted-roles" title="Permalink to this headline">¶</a></h3>
+<p>Typically, however, you won&#8217;t point a node to the default role. You&#8217;ll want to
+create job-specific roles that include the default role.  Let&#8217;s set up a web
+server that uses Nginx next.  Create a file called <em>web.rb</em> in your <em>roles</em>
+directory.</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="nb">name</span> <span class="s1">&#39;web&#39;</span>
+<span class="n">description</span> <span class="s1">&#39;A web server that handles requests using Nginx.&#39;</span>
+<span class="n">run_list</span> <span class="s2">&quot;role[default]&quot;</span><span class="p">,</span> <span class="s2">&quot;recipe[nginx]&quot;</span>
+</pre></div>
+</div>
+<p>This role will read the default role, which runs the <tt class="docutils literal"><span class="pre">server</span></tt> recipe with
+the configuration provided.  Then it will run the <tt class="docutils literal"><span class="pre">nginx</span></tt> recipe, which
+installs the standard Nginx package.</p>
+<p>Now, we need to point our node to this role.  Under your <em>nodes</em> directory,
+find the appropriate node and make it look like this:</p>
+<div class="highlight-js"><div class="highlight"><pre><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;mywebserver&quot;</span><span class="p">,</span> <span class="s2">&quot;run_list&quot;</span><span class="o">:</span> <span class="s2">&quot;role[web]&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="site-cookbooks">
+<h2>Site Cookbooks<a class="headerlink" href="#site-cookbooks" title="Permalink to this headline">¶</a></h2>
+<p>At this point, you&#8217;re probably wanting to create a site config for Nginx.  You
+will also want to put a page up for Nginx to serve.  For this, you&#8217;ll want to
+begin a site cookbook.  This is where you&#8217;ll get into the really specific
+details about your configuration, and is likely where the bulk of your code
+will be.</p>
+<p>To create a site cookbook, create a <em>site-cookbooks</em> directory underneath
+<em>deploy</em>.  Then, create a cookbook folder with a name like <em>mysite</em> inside.</p>
+<div class="section" id="recipes">
+<h3>Recipes<a class="headerlink" href="#recipes" title="Permalink to this headline">¶</a></h3>
+<p>The first thing you&#8217;ll want to do is create a recipe inside your cookbook.
+Create a <em>recipes</em> folder inside your cookbook folder.  Create a recipe called
+<em>web.rb</em> that looks like this:</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">include_recipe</span> <span class="s2">&quot;nginx&quot;</span>
+
+<span class="n">nginx_site</span> <span class="s2">&quot;mysite&quot;</span> <span class="k">do</span>
+  <span class="n">template</span> <span class="s2">&quot;nginx/mysite.conf.erb&quot;</span>
+  <span class="n">action</span> <span class="ss">:enable</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>This will create a site config under <em>/etc/nginx/sites-available</em>, and then
+symlink it into <em>sites-enabled</em>.</p>
+</div>
+<div class="section" id="templates">
+<h3>Templates<a class="headerlink" href="#templates" title="Permalink to this headline">¶</a></h3>
+<p>If you run the deploy just like that, however, it will fail.  You need to
+create the template that the definition above alludes to.  Create a directory
+inside your cookbook folder called <em>templates</em>.  Underneath that, create a
+directory called <em>default</em>.</p>
+<p>There, you can create an <em>erb</em> template for your Nginx site config.  This is
+done in <em>erb</em> format so that you can insert data from your attributes later.
+Create a directory called <em>nginx</em> under <em>default</em>, and then a file called
+<em>mysite.conf.erb</em> that looks like this:</p>
+<div class="highlight-nginx"><div class="highlight"><pre><span class="k">server</span> <span class="p">{</span>
+  <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
+  <span class="kn">server_name</span> <span class="s">mysite.com</span><span class="p">;</span>
+
+  <span class="kn">root</span> <span class="s">/var/www/construction</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This will most likely just be a static &#8220;Under construction&#8221; landing page, since
+we&#8217;re not ready to start using a dynamic framework like Django or Rails yet.
+Because of this, I&#8217;m pointing the site to an arbitrary construction page
+location.</p>
+</div>
+<div class="section" id="directories-and-files">
+<h3>Directories and Files<a class="headerlink" href="#directories-and-files" title="Permalink to this headline">¶</a></h3>
+<p>Next, we&#8217;ll briefly dive into basic Chef config territory to take you the rest
+of the way to getting the landing page up.  In your <em>web.rb</em> recipe, add the
+following lines:</p>
+<div class="highlight-ruby"><div class="highlight"><pre><span class="n">directory</span> <span class="s2">&quot;/var/www/construction&quot;</span> <span class="k">do</span>
+  <span class="n">owner</span> <span class="s2">&quot;www-data&quot;</span>
+  <span class="n">group</span> <span class="s2">&quot;sdmin&quot;</span>
+  <span class="n">mode</span> <span class="s2">&quot;0755&quot;</span>
+<span class="k">end</span>
+
+<span class="n">cookbook_file</span> <span class="s2">&quot;/var/www/construction/index.html&quot;</span> <span class="k">do</span>
+  <span class="n">source</span> <span class="s2">&quot;index.html&quot;</span>
+  <span class="n">owner</span> <span class="s2">&quot;www-data&quot;</span>
+  <span class="n">group</span> <span class="s2">&quot;admin&quot;</span>
+  <span class="n">mode</span> <span class="s2">&quot;0644&quot;</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>Now, add create a folder underneath your <em>mysite</em> cookbook called <em>files</em>.
+Inside, create a <em>default</em> folder, and then an <em>index.html</em> file.  Add to this
+file what you wish.</p>
+<p>This will create the <em>/var/www/construction</em> directory on your server, and
+copy the <em>index.html</em> file to it.  From this point, you should be ready to run
+the deploy, access your server, and marvel at your delightful landing page.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Next Steps</a><ul>
+<li><a class="reference internal" href="#roles">Roles</a><ul>
+<li><a class="reference internal" href="#the-default-role">The Default Role</a></li>
+<li><a class="reference internal" href="#targeted-roles">Targeted Roles</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#site-cookbooks">Site Cookbooks</a><ul>
+<li><a class="reference internal" href="#recipes">Recipes</a></li>
+<li><a class="reference internal" href="#templates">Templates</a></li>
+<li><a class="reference internal" href="#directories-and-files">Directories and Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="gettingstarted.html"
+                        title="previous chapter">Getting Started</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/nextsteps.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="gettingstarted.html" title="Getting Started"
+             >previous</a> |</li>
+        <li><a href="index.html">chef-cookbooks v0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2010, Brandon Konkle.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>
