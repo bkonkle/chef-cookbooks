@@ -11,7 +11,7 @@ define :django_app, :action => :deploy, :user => "root", :mode => "0755",
   venv = (params[:virtualenv] or "#{venvs_dir}/#{params[:name]}")
   server_type = node[:django][:app_server]
   requirements = (params[:requirements] or "#{path}/code/requirements.txt")
-  bin_path = (params[:manage_path] or "#{path}/code/#{params[:name]}")
+  bin_path = (params[:bin_path] or "#{path}/code/#{params[:name]}")
   collectstatic = (params[:collectstatic] or true)
 
   directory path do
