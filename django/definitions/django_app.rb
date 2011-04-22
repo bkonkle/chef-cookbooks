@@ -11,7 +11,7 @@ define :django_app, :action => :deploy, :user => "root", :mode => "0755",
   venv = (params[:virtualenv] or "#{venvs_dir}/#{params[:name]}")
   server_type = node[:django][:app_server]
   requirements = (params[:requirements] or "#{path}/code/requirements.txt")
-  manage_cmd = (params[:manage_path] or "#{path}/code/#{params[:name]}/manage.py")
+  bin_path = (params[:manage_path] or "#{path}/code/#{params[:name]}")
   collectstatic = (params[:collectstatic] or true)
 
   directory path do
@@ -67,8 +67,8 @@ define :django_app, :action => :deploy, :user => "root", :mode => "0755",
   
   if collectstatic
     execute "collect static media" do
-      command "#{manage_cmd} collectstatic --noinput"
-      cwd "#{path}/current"
+      command "#{venv}/bin/python manage.py collectstatic --noinput"
+      cwd "#{bin_path}"
       ignore_failure true
     end
   end
