@@ -22,7 +22,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="chef-cookbooks v0.1 documentation" href="index.html" />
-    <link rel="prev" title="Basic Django Deployment" href="basicdjango.html" /> 
+    <link rel="next" title="Next Steps" href="nextsteps.html" />
+    <link rel="prev" title="Welcome to chef-cookbooks’s documentation!" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -32,7 +33,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="basicdjango.html" title="Basic Django Deployment"
+          <a href="nextsteps.html" title="Next Steps"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to chef-cookbooks’s documentation!"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">chef-cookbooks v0.1 documentation</a> &raquo;</li> 
       </ul>
@@ -50,24 +54,22 @@ search are not utilized.  These cookbooks should still run smoothly on Chef
 client/server, though.  They are primarily for Django and Rails sites, and
 should be suitable for both small one-server projects or large multi-server
 deployments.</p>
-<p>Currently the only OS supported is Ubuntu (Lucid or above), the only version
-control system supported is Git, and the only web server supported is Nginx.
-This will change in the future as the cookbooks are expanded.</p>
-<p>To use these cookbooks, you will create some site-specific configuration
-files in your project&#8217;s source control.  These will usually include nodes,
-roles, and a site-cookbook for your site.  These site-specific files will
-work with the modular cookbooks here to fully provision your servers.</p>
-<p>I welcome any contributions, so feel free to fork and send pull requests if
-you have something you&#8217;d like to share.</p>
+<p>Currently the only OS supported is Ubuntu (Lucid or above). To use these
+cookbooks, you will create some site-specific configuration files in your
+project&#8217;s source control. These will usually include nodes, roles, and a
+site-cookbook for your site. These site-specific files will work with the
+modular cookbooks here to fully provision your servers.</p>
+<p>Contributions are welcome, so feel free to fork and send pull requests if you
+have something you&#8217;d like to share.</p>
 <div class="section" id="first-steps">
 <h2>First Steps<a class="headerlink" href="#first-steps" title="Permalink to this headline">¶</a></h2>
-<p>To begin, create a folder called &#8220;deploy&#8221; under the top-level project directory
-for your site, should be under version control.  This will hold your
+<p>To begin, create a folder called &#8220;config&#8221; under the top-level project directory
+for your site, which should be under version control.  This will hold your
 configuration files.</p>
 <div class="section" id="installing-fabric">
 <h3>Installing Fabric<a class="headerlink" href="#installing-fabric" title="Permalink to this headline">¶</a></h3>
 <p>An easy way to bootstrap your new server now, and run deploys on your server
-later, is to use <a class="reference external" href="&lt;http://docs.fabfile.org/0.9.3/&gt;">Fabric</a> with the <em>fabfile.py</em> example included in this
+later, is to use <a class="reference external" href="&lt;http://docs.fabfile.org/&gt;">Fabric</a> with the <em>fabfile.py</em> example included in this
 project.  Fabric is a Python-based tool for automated control of one or more
 servers via SSH.  If you don&#8217;t already have it, use <em>easy_install</em> or <em>pip</em> to
 install it:</p>
@@ -79,20 +81,22 @@ install it:</p>
 </pre></div>
 </div>
 <p>Copy <em>fabfile.py.example</em> from this project, and remove the <em>.example</em> from the
-name.  Save it to your <em>deploy</em> directory.  Edit the <tt class="docutils literal"><span class="pre">env.roledefs</span></tt> attribute
-to match your environment.</p>
-<p>A basic <tt class="docutils literal"><span class="pre">env.roledefs</span></tt> which justs set up 1 server would look like this:</p>
+name.  Save it to your project&#8217;s root directory.  Edit the <tt class="docutils literal"><span class="pre">env.roledefs</span></tt>
+attribute to match your environment.</p>
+<p>A basic <tt class="docutils literal"><span class="pre">env.roledefs</span></tt> which described 1 server would look like this:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">env</span><span class="o">.</span><span class="n">roledefs</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s">&#39;dev&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;myserver&#39;</span><span class="p">],</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>In this example, &#8216;myserver&#8217; is the hostname of your remote machine.</p>
+<p>In this example, &#8216;myserver&#8217; is the hostname of your remote machine.  This
+fabfile defaults to the &#8216;dev&#8217; environment if nothing is specified on the
+command line.</p>
 </div>
 <div class="section" id="minimal-config">
 <h3>Minimal Config<a class="headerlink" href="#minimal-config" title="Permalink to this headline">¶</a></h3>
 <p>To start out with the most basic usable config, which will set up the server
-and a user, first create a <em>nodes</em> directory inside <em>deploy</em>.  Within that
+and a user, first create a <em>nodes</em> directory inside <em>config</em>.  Within that
 directory, create a <em>.json</em> file with the same name as your server hostname
 (which you specified in <tt class="docutils literal"><span class="pre">env.roledefs</span></tt> if you&#8217;re using the included fabfile).</p>
 <p>Edit <em>myserver.json</em> to look like this, inserting your desired values:</p>
@@ -112,7 +116,7 @@ directory, create a <em>.json</em> file with the same name as your server hostna
 <p>The &#8220;ssh_keys&#8221; attribute will create the &#8220;authorized_keys&#8221; file so that you
 can connect to your server without needing a password.  Use your dev machine&#8217;s
 public key for this.</p>
-<p>Next, create a <em>solo.rb</em> file under the <em>deploy</em> directory.  This should look
+<p>Next, create a <em>solo.rb</em> file under the <em>config</em> directory.  This should look
 similar to the following:</p>
 <div class="highlight-ruby"><div class="highlight"><pre><span class="n">log_level</span> <span class="ss">:info</span>
 <span class="n">cookbook_path</span> <span class="o">[</span><span class="s2">&quot;/etc/chef/cookbooks&quot;</span><span class="p">,</span> <span class="s2">&quot;/etc/chef/site-cookbooks&quot;</span><span class="o">]</span>
@@ -123,36 +127,40 @@ similar to the following:</p>
 <div class="section" id="bootstrapping">
 <h3>Bootstrapping<a class="headerlink" href="#bootstrapping" title="Permalink to this headline">¶</a></h3>
 <p>You are now ready to bootstrap your machine, which will install all the
-packages needed for Chef and then deploy your configuration.  Switch to the
-deploy directory and run the <tt class="docutils literal"><span class="pre">fab</span> <span class="pre">bootstrap</span></tt> command.  You&#8217;ll likely have to
-enter your root password twice along the way, but at the end of the process
-you should be able to SSH into your server under the user you created without
-needing a password.</p>
+packages needed for Chef and then sync your configuration.  Switch to the
+<em>config</em> directory and run the <tt class="docutils literal"><span class="pre">fab</span> <span class="pre">bootstrap</span></tt> command:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>fab bootstrap
+</pre></div>
+</div>
+<p>You&#8217;ll likely have to enter your root password twice along the way, but at the
+end of the process you should be able to SSH into your server under the user
+you created without needing a password.</p>
 </div>
 </div>
-<div class="section" id="deploying-config-changes">
-<h2>Deploying Config Changes<a class="headerlink" href="#deploying-config-changes" title="Permalink to this headline">¶</a></h2>
-<p>To deploy, you need to switch to the <em>deploy</em> directory and run the <tt class="docutils literal"><span class="pre">fab</span>
-<span class="pre">deploy</span></tt> command. This command will use <em>rsync</em> to synchronize your local
-<em>deploy</em> directory to each remote server, and then run <em>chef-solo</em> to update
-the configuration and deploy the new code.</p>
-<p>Note that the files in your local checkout of <em>deploy</em> will be copied directly
+<div class="section" id="syncing-config-changes">
+<h2>Syncing Config Changes<a class="headerlink" href="#syncing-config-changes" title="Permalink to this headline">¶</a></h2>
+<p>To update your configuration, you need to run the <tt class="docutils literal"><span class="pre">fab</span> <span class="pre">sync_config</span></tt> command.
+This command will use <em>rsync</em> to synchronize your local <em>config</em> directory to
+each remote server, and then run <em>chef-solo</em> to update the configuration:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>fab sync_config
+</pre></div>
+</div>
+<p>Note that the files in your local <em>config</em> directory will be copied directly
 to the server using <em>rsync</em>, so make sure you are on the right branch before
-running the deploy.</p>
-<div class="section" id="deploying-to-a-specific-environment">
-<h3>Deploying to a Specific Environment<a class="headerlink" href="#deploying-to-a-specific-environment" title="Permalink to this headline">¶</a></h3>
-<p>Fabric will default to the &#8220;dev&#8221; environment. If you want to deploy to a
-different role, you will need to use the -R option and specify the rolename
-from <tt class="docutils literal"><span class="pre">env.roledefs</span></tt>. For example:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>fab -R prod deploy
+running the sync.</p>
+<div class="section" id="syncing-a-different-environment">
+<h3>Syncing a Different Environment<a class="headerlink" href="#syncing-a-different-environment" title="Permalink to this headline">¶</a></h3>
+<p>Fabric will default to the &#8220;dev&#8221; environment. If you want to sync a
+different environment, you will need to use the -R option and specify the
+rolename from <tt class="docutils literal"><span class="pre">env.roledefs</span></tt>. For example:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>fab -R prod sync_config
 </pre></div>
 </div>
 </div>
-<div class="section" id="deploying-to-a-specific-host">
-<h3>Deploying to a Specific Host<a class="headerlink" href="#deploying-to-a-specific-host" title="Permalink to this headline">¶</a></h3>
-<p>If you need to deploy to just one host, you can use the -H option. For
-example:</p>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>fab -H myhost deploy
+<div class="section" id="syncing-a-specific-host">
+<h3>Syncing a Specific Host<a class="headerlink" href="#syncing-a-specific-host" title="Permalink to this headline">¶</a></h3>
+<p>If you need to sync to just one host, you can use the -H option. For example:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>fab -H myhost sync_config
 </pre></div>
 </div>
 </div>
@@ -174,9 +182,9 @@ example:</p>
 <li><a class="reference internal" href="#bootstrapping">Bootstrapping</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#deploying-config-changes">Deploying Config Changes</a><ul>
-<li><a class="reference internal" href="#deploying-to-a-specific-environment">Deploying to a Specific Environment</a></li>
-<li><a class="reference internal" href="#deploying-to-a-specific-host">Deploying to a Specific Host</a></li>
+<li><a class="reference internal" href="#syncing-config-changes">Syncing Config Changes</a><ul>
+<li><a class="reference internal" href="#syncing-a-different-environment">Syncing a Different Environment</a></li>
+<li><a class="reference internal" href="#syncing-a-specific-host">Syncing a Specific Host</a></li>
 </ul>
 </li>
 </ul>
@@ -184,8 +192,11 @@ example:</p>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="basicdjango.html"
-                        title="previous chapter">Basic Django Deployment</a></p>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to chef-cookbooks&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nextsteps.html"
+                        title="next chapter">Next Steps</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/gettingstarted.txt"
@@ -215,14 +226,17 @@ example:</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="basicdjango.html" title="Basic Django Deployment"
+          <a href="nextsteps.html" title="Next Steps"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to chef-cookbooks’s documentation!"
              >previous</a> |</li>
         <li><a href="index.html">chef-cookbooks v0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Brandon Konkle.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

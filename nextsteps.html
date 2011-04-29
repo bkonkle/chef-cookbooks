@@ -56,7 +56,7 @@ node config, you&#8217;ll want to set this up in your roles.</p>
 <p>The first role you&#8217;ll want to create is your default role, which will handle
 configuration that you want to be uniform across all of your nodes.  This often
 includes things like an admin group, or a deploy user.</p>
-<p>Create a directory called <em>roles</em> inside of <em>deploy</em>.  Then create a
+<p>Create a directory called <em>roles</em> inside of <em>config</em>.  Then create a
 <em>default.rb</em> file inside the folder that looks like this:</p>
 <div class="highlight-ruby"><div class="highlight"><pre><span class="nb">name</span> <span class="s1">&#39;default&#39;</span>
 <span class="n">description</span> <span class="s1">&#39;Default role for myapp servers.&#39;</span>
@@ -218,7 +218,7 @@ begin a site cookbook.  This is where you&#8217;ll get into the really specific
 details about your configuration, and is likely where the bulk of your code
 will be.</p>
 <p>To create a site cookbook, create a <em>site-cookbooks</em> directory underneath
-<em>deploy</em>.  Then, create a cookbook folder with a name like <em>mysite</em> inside.</p>
+<em>config</em>.  Then, create a cookbook folder with a name like <em>mysite</em> inside.</p>
 <div class="section" id="recipes">
 <h3>Recipes<a class="headerlink" href="#recipes" title="Permalink to this headline">¶</a></h3>
 <p>The first thing you&#8217;ll want to do is create a recipe inside your cookbook.
@@ -237,10 +237,10 @@ symlink it into <em>sites-enabled</em>.</p>
 </div>
 <div class="section" id="templates">
 <h3>Templates<a class="headerlink" href="#templates" title="Permalink to this headline">¶</a></h3>
-<p>If you run the deploy just like that, however, it will fail.  You need to
-create the template that the definition above alludes to.  Create a directory
-inside your cookbook folder called <em>templates</em>.  Underneath that, create a
-directory called <em>default</em>.</p>
+<p>If you run the sync just like that, however, it will fail. You need to create
+the template that the definition above alludes to. Create a directory inside
+your cookbook folder called <em>templates</em>. Underneath that, create a directory
+called <em>default</em>.</p>
 <p>There, you can create an <em>erb</em> template for your Nginx site config.  This is
 done in <em>erb</em> format so that you can insert data from your attributes later.
 Create a directory called <em>nginx</em> under <em>default</em>, and then a file called
@@ -282,7 +282,7 @@ Inside, create a <em>default</em> folder, and then an <em>index.html</em> file. 
 file what you wish.</p>
 <p>This will create the <em>/var/www/construction</em> directory on your server, and
 copy the <em>index.html</em> file to it.  From this point, you should be ready to run
-the deploy, access your server, and marvel at your delightful landing page.</p>
+the sync, access your server, and marvel at your delightful landing page.</p>
 </div>
 </div>
 </div>
@@ -350,7 +350,7 @@ the deploy, access your server, and marvel at your delightful landing page.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2010, Brandon Konkle.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

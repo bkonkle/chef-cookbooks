@@ -16,7 +16,7 @@ The first role you'll want to create is your default role, which will handle
 configuration that you want to be uniform across all of your nodes.  This often
 includes things like an admin group, or a deploy user.
 
-Create a directory called *roles* inside of *deploy*.  Then create a
+Create a directory called *roles* inside of *config*.  Then create a
 *default.rb* file inside the folder that looks like this:
 
 .. code-block:: ruby
@@ -127,7 +127,6 @@ In this case, a user will be created with the username "myuser".  Any group
 added to any user in this attribute will cause that group to be created
 automatically by the ``users`` recipe.
 
-
 .. code-block:: ruby
 
           "ssh_keys" => <<-SSHKEYS,
@@ -197,7 +196,7 @@ details about your configuration, and is likely where the bulk of your code
 will be.
 
 To create a site cookbook, create a *site-cookbooks* directory underneath
-*deploy*.  Then, create a cookbook folder with a name like *mysite* inside.
+*config*.  Then, create a cookbook folder with a name like *mysite* inside.
 
 Recipes
 *******
@@ -221,10 +220,10 @@ symlink it into *sites-enabled*.
 Templates
 *********
 
-If you run the deploy just like that, however, it will fail.  You need to
-create the template that the definition above alludes to.  Create a directory
-inside your cookbook folder called *templates*.  Underneath that, create a
-directory called *default*.
+If you run the sync just like that, however, it will fail. You need to create
+the template that the definition above alludes to. Create a directory inside
+your cookbook folder called *templates*. Underneath that, create a directory
+called *default*.
 
 There, you can create an *erb* template for your Nginx site config.  This is
 done in *erb* format so that you can insert data from your attributes later.
@@ -273,4 +272,4 @@ file what you wish.
 
 This will create the */var/www/construction* directory on your server, and
 copy the *index.html* file to it.  From this point, you should be ready to run
-the deploy, access your server, and marvel at your delightful landing page.
+the sync, access your server, and marvel at your delightful landing page.
