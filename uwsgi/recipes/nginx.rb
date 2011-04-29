@@ -37,3 +37,10 @@ unless File.directory?(node[:nginx][:source_path])
     end
   end
 end
+
+cookbook_file "/etc/nginx/uwsgi_params" do
+  owner "root"
+  source "uwsgi_params"
+  mode "0644"
+end
+
