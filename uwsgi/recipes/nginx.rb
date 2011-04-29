@@ -1,4 +1,5 @@
 include_recipe "uwsgi"
+include_recipe "nginx::base"
 package "build-essential"
 
 # Recompiles Nginx to include the uWSGI module
