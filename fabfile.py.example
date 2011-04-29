@@ -12,17 +12,10 @@ env.roledefs = {
     'prod': ['myserver', 'myotherserver'],
     'dev': ['mydevserver'],
 }
-env.disable_known_hosts = True
-
-
-# Create a reverse map
-env.server_roles = {}
-for role, servers in env.roledefs.items():
-    for server in servers:
-        env.server_roles[server] = role
 
 env.chef_executable = '/var/lib/gems/1.8/bin/chef-solo'
 env.cookbook_repo = 'git://github.com/bkonkle/chef-cookbooks.git'
+env.disable_known_hosts = True
 
 # Default to the dev role if no role was specified
 if not env.get('roles') and not env.get('hosts'):
