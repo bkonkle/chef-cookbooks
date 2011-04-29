@@ -23,6 +23,10 @@ if not env.get('roles') and not env.get('hosts'):
 
 
 def bootstrap_chef():
+    """
+    Installs the necessary dependencies for chef-solo, and run an initial
+    synchronization of the config.
+    """
     with settings(user='root'):
         # Install the necessary packages
         run('apt-get update')
@@ -46,7 +50,10 @@ def bootstrap_chef():
 
 
 def sync_config():
-    """"""
+    """
+    Synchronizes the local configuration files to the server, and runs
+    chef-solo to update the server.
+    """
     local('rsync -az --delete %s %s@%s:~/.chefconfig/'
           % (CONFIG_ROOT, env.user, env.host))
     sudo('rsync -az ~/.chefconfig/ /etc/chef/')
