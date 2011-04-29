@@ -13,4 +13,5 @@ execute "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B33D8107"
   not_if "apt-key export 'Launchpad PPA for uWSGI Maintainers'"
 end
 
-package "uwsgi"
+package "uwsgi-python"
+package "uwsgi-extra"
