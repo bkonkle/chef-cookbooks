@@ -30,9 +30,8 @@ def bootstrap_chef():
         run('apt-get install -y git-core rubygems ruby ruby-dev')
         run('gem install --no-rdoc --no-ri chef')
         
-        # Go ahead and run a deploy as root, which will set up the initial
-        # users of the system.
-        local('rsync -avz . root@%s:/etc/chef' % env.host)
+        # Copy the local configuration to the server
+        local('rsync -avz %s root@%s:/etc/chef' % (CONFIG_ROOT, env.host))
         
         with settings(warn_only=True):
             # If the /etc/chef/cookbooks directory already exists, then make
