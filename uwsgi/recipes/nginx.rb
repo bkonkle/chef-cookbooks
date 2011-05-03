@@ -20,12 +20,11 @@ unless File.directory?(node[:nginx][:source_path])
       code <<-EOH
         apt-get -y build-dep nginx
         apt-get source nginx
-        cd nginx-*
       EOH
     end
     
     execute "Build Nginx" do
-      command "dpkg-buildpackage"
+      command "cd #{node[:nginx][:source_path]}/nginx-* && dpkg-buildpackage"
       environment ({'CONFIGURE_OPTS' => "--add-module=/usr/share/doc/uwsgi-extra/nginx #{configure_flags}"})
     end
     
