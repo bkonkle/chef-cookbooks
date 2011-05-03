@@ -1,11 +1,8 @@
-%w{python-setuptools python-pip python-dev}.each do |pkg|
+%w{python-setuptools python-dev}.each do |pkg|
   package pkg do
     action :upgrade
   end
 end
 
-pip_package "pip" do
-  action :upgrade
-end
-
+easy_install_package "pip"
 pip_package "virtualenv"
