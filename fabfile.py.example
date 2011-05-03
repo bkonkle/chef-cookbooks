@@ -1,5 +1,7 @@
+import os
 from os.path import join, realpath, dirname
 from fabric.api import cd, env, local, run, sudo, settings
+from fabric.contrib.project import rsync_project
 
 # This file is designed to live in your project root, with the Chef
 # configuration contained in a directory called 'config' directly underneath
@@ -34,8 +36,9 @@ def bootstrap_chef():
         run('apt-get install -y git-core rubygems ruby ruby-dev')
         run('gem install --no-rdoc --no-ri chef')
         
-        # Copy the local configuration to the server
-        local('rsync -avz %s root@%s:/etc/chef' % (CONFIG_ROOT, env.host))
+        # Copy the local configuration to the server.
+        rsync_project(remote_dir='/etc/chef/',
+                      local_dir=CONFIG_ROOT + os.linesep)
         
         with settings(warn_only=True):
             # If the /etc/chef/cookbooks directory already exists, then make
