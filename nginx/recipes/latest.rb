@@ -16,3 +16,5 @@ execute "Add Nginx PPA key" do
 end
 
 package "nginx-full"
+
+include_recipe "nginx::base"
