@@ -13,5 +13,5 @@ template "/etc/nginx/nginx.conf" do
   mode 0644
   owner "root"
   group "root"
-  notifies :restart, resources(:service => "nginx")
+  notifies :restart, "service[nginx]"
 end

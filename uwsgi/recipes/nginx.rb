@@ -1,5 +1,4 @@
 include_recipe "uwsgi"
-include_recipe "nginx::base"
 package "build-essential"
 
 # Recompiles Nginx to include the uWSGI module
@@ -44,3 +43,4 @@ cookbook_file "/etc/nginx/uwsgi_params" do
   mode "0644"
 end
 
+include_recipe "nginx::base"
