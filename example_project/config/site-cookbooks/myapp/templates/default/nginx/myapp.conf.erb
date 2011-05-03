@@ -1,0 +1,21 @@
+upstream myapp {
+    server	unix:/tmp/myapp.sock;
+}
+
+server {
+    listen 80;
+    server_name www.<%= node[:application][:domain] %>;
+    rewrite ^/(.*) http://<%= node[:application][:domain] %>/$1 permanent;
+}
+
+server {
+    listen 80;
+    server_name <%= node[:application][:domain] %>;
+    root /var/www/<%= node[:application][:domain] %>/;
+    access_log  /var/log/nginx/<%= node[:application][:domain] %>/access.log;
+
+    location / {
+        uwsgi_pass myapp;
+        include uwsgi_params;
+    }
+}

@@ -1,12 +1,12 @@
-from os import linesep
+from os import sep
 from os.path import join, realpath, dirname
-from fabric.api import env, local, run, require, cd
+from fabric.api import cd, env, local, run, sudo, require, settings
 from fabric.contrib.project import rsync_project
 from fabric.context_managers import hide
 from fabric.operations import _prefix_commands, _prefix_env_vars
 
 env.disable_known_hosts = True # always fails for me without this
-env.root = '/opt/webapps/dev.myproject.com'
+env.root = '/opt/webapps/example_project'
 env.proj_root = env.root + '/src/chef-cookbooks/example_project'
 env.proj_repo = 'git@github.com:lincolnloop/chef-cookbooks.git'
 env.pip_file = env.proj_root + '/requirements.pip'
@@ -14,12 +14,14 @@ env.chef_executable = '/var/lib/gems/1.8/bin/chef-solo'
 env.cookbook_repo = 'git://github.com/lincolnloop/chef-cookbooks.git'
 
 env.roledefs = {
-    'dev': ['dev.myproject.com'],
+    'dev': ['exampleproject'],
 }
 
 # Default to the dev role if no role was specified
 if not env.get('roles') and not env.get('hosts'):
     env.roles = ['dev']
+    
+CONFIG_ROOT = join(realpath(dirname(__file__)), 'config')
 
 
 def deploy():
@@ -73,6 +75,53 @@ def clone():
     with cd('%s/myapp/conf/local' % env.proj_root):
         run('ln -s ../dev/__init__.py')
         run('ln -s ../dev/settings.py')
+
+
+def sync_config():
+    """
+    Synchronizes the local configuration files to the server, and runs
+    chef-solo to update the server.
+    """
+    rsync_project(remote_dir='~/.chefconfig/',
+                  local_dir=CONFIG_ROOT + sep, delete=True)
+    sudo('rsync -az ~/.chefconfig/ /etc/chef/')
+    sudo('sudo chown -R root:root /etc/chef/')
+    with cd("/etc/chef/cookbooks"):
+        sudo('git reset --hard && git pull')
+    
+    sudo('%s -j /etc/chef/nodes/%s.json' % (env.chef_executable, env.host))
+
+
+def bootstrap_chef():
+    """
+    Installs the necessary dependencies for chef-solo, and run an initial
+    synchronization of the config.
+    """
+    with settings(user='root'):
+        # Install the necessary packages
+        run('apt-get update')
+        run('apt-get -y dist-upgrade')
+        run('apt-get install -y git-core rubygems ruby ruby-dev')
+        run('gem install --no-rdoc --no-ri chef')
+        
+        # Copy the local configuration to the server
+        rsync_project(remote_dir='/etc/chef/', local_dir=CONFIG_ROOT + sep)
+        
+        with settings(warn_only=True):
+            with hide('everything'):
+                test_cookbook_dir = run('test -d /etc/chef/cookbooks')
+
+        # If the /etc/chef/cookbooks directory already exists, then make
+        # sure the cookbook repo is up to date.  Otherwise, clone it.
+        if test_cookbook_dir.return_code == 0:
+            with cd('/etc/chef/cookbooks'):
+                sshagent_run('git reset --hard && git pull')
+        else:
+            sshagent_run('git clone %s /etc/chef/cookbooks'
+                         % env.cookbook_repo)
+        
+        run('%s -j /etc/chef/nodes/%s.json' % (env.chef_executable, env.host))
+
 
 
 def ve_run(cmd):

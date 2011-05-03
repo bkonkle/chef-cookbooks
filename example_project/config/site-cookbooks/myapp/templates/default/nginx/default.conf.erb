@@ -1,0 +1,8 @@
+server {
+  listen 80 default;
+  
+  # Catch requests that don't match any other server name
+  server_name _;
+  
+  rewrite ^/(.*) http://<%= node[:application][:domain] %>/$1 permanent;
+}
