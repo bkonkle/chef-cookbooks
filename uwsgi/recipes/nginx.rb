@@ -18,15 +18,20 @@ unless File.directory?(node[:nginx][:source_path])
     user "root"
       cwd node[:nginx][:source_path]
       code <<-EOH
-        apt-get build-dep nginx
+        apt-get -y build-dep nginx
         apt-get source nginx
         cd nginx-*
-        CONFIGURE_OPTS="--add-module=/usr/share/doc/uwsgi-extra/nginx #{configure_flags}" dpkg-buildpackage
-        cd ..
-        dpkg -i nginx_*.deb
-        echo "nginx hold" | dpkg --set-selections
       EOH
     end
+    
+    execute "Build Nginx" do
+      command "dpkg-buildpackage"
+      environment ({'CONFIGURE_OPTS' => "--add-module=/usr/share/doc/uwsgi-extra/nginx #{configure_flags}"})
+    end
+    
+    dpkg_package "#{node[:nginx][:source_path]}/nginx_*.deb"
+    
+    execute 'echo "nginx hold" | dpkg --set-selections'
   rescue
     # Make sure that the directory goes away if there's an error, so that the
     # install will be attempted again on the next Chef run
