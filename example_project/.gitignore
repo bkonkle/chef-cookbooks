@@ -1,0 +1,7 @@
+*~
+*.pyc
+docs/_build/*
+uploads
+example_project/conf/local/*.py
+dev.db
+example_project.egg-info
