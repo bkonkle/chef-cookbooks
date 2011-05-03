@@ -15,9 +15,3 @@ template "/etc/nginx/nginx.conf" do
   group "root"
   notifies :restart, resources(:service => "nginx")
 end
-
-directory node[:sites][:dir] do
-  owner node[:sites][:user]
-  group node[:sites][:group]
-  mode node[:sites][:mode]
-end
