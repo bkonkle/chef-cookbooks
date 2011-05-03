@@ -9,8 +9,8 @@ template "/etc/apt/sources.list.d/uwsgi.list" do
   notifies :run, resources("execute[apt-get update]"), :immediately
 end
 
-execute "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B33D8107" do
-  not_if "apt-key export 'Launchpad PPA for uWSGI Maintainers'"
+execute "Add uWSGI PPA key" do
+  command "sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B33D8107"
 end
 
 package "uwsgi-python"
