@@ -3,6 +3,12 @@
 include_recipe "users"
 include_recipe "sudo"
 
+# Keep apt up to date
+e = execute "apt-get update" do
+  action :nothing
+end
+e.run_action(:run)
+
 BASE_PACKAGES = ["git-core", "bash-completion", "emacs23-nox", "postfix",
                  "bsd-mailx", "build-essential", "python-software-properties",
                  "ntp"]
