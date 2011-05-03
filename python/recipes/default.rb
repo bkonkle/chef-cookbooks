@@ -1,15 +1,11 @@
-PACKAGES = ["python-setuptools", "python-pip", "python-dev"]
-PIP_PACKAGES = {"virtualenv" => "1.5.1"}
-
-PACKAGES.each do |pkg|
+%w{python-setuptools python-pip python-dev}.each do |pkg|
   package pkg do
     action :upgrade
   end
 end
 
-PIP_PACKAGES.each_pair do |pkg, ver|
-  pip_package pkg do
-    action :install
-    version ver
-  end
+pip_package "pip" do
+  action :upgrade
 end
+
+pip_package "virtualenv"

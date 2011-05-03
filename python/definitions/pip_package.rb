@@ -18,7 +18,7 @@ define :pip_package, :action => :install, :version => nil, :venv => nil,
   venv = params[:venv]
   
   case params[:action]
-  when :install
+  when :install, :upgrade
 
     if version
       vstring = "==%s" % version
@@ -34,8 +34,14 @@ define :pip_package, :action => :install, :version => nil, :venv => nil,
       env = ""
     end
     
+    if params[:action] == :upgrade
+      upgrade = "-U "
+    else
+      upgrade = ""
+    end
+    
     execute "install-#{name}" do
-      command "pip install #{env}#{name}#{vstring}"
+      command "pip install #{upgrade}#{env}#{name}#{vstring}"
       user params[:owner]
       group params[:group]
       not_if installed

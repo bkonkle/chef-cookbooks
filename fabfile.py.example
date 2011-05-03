@@ -61,8 +61,8 @@ def sync_config():
     Synchronizes the local configuration files to the server, and runs
     chef-solo to update the server.
     """
-    local('rsync -az --delete %s %s@%s:~/.chefconfig/'
-          % (CONFIG_ROOT, env.user, env.host))
+    rsync_project(remote_dir='~/.chefconfig/',
+                  local_dir=CONFIG_ROOT + '/', delete=True)
     sudo('rsync -az ~/.chefconfig/ /etc/chef/')
     sudo('sudo chown -R root:root /etc/chef/')
     with cd("/etc/chef/cookbooks"):
