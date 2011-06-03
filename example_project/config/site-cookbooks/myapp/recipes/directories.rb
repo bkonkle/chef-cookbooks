@@ -1,10 +1,10 @@
 DIRS = [
-  "#{node[:application][:virtualenv]}/etc",
-  "#{node[:application][:virtualenv]}/var",
-  "#{node[:application][:virtualenv]}/src",
-  "/var/www/#{node[:application][:domain]}",
-  "/var/log/nginx/#{node[:application][:domain]}",
-  "/var/log/apache2/#{node[:application][:domain]}"
+  "#{node[:apps][:example_project][:virtualenv]}/etc",
+  "#{node[:apps][:example_project][:virtualenv]}/var",
+  "#{node[:apps][:example_project][:virtualenv]}/src",
+  "/var/www/#{node[:apps][:example_project][:domain]}",
+  "/var/log/nginx/#{node[:apps][:example_project][:domain]}",
+  "/var/log/apache2/#{node[:apps][:example_project][:domain]}"
 ]
 
 DIRS.each do |dirname|

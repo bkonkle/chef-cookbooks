@@ -9,7 +9,7 @@ include_recipe "myapp::directories"
 end
 
 virtualenv "example_project" do
-  path node[:application][:virtualenv]
+  path node[:apps][:example_project][:virtualenv]
   owner "myuser"
   group "admin"
   mode "0755"
@@ -20,7 +20,7 @@ nginx_site "default" do
   action :enable
 end
 
-cookbook_file "#{node[:application][:virtualenv]}/etc/django.wsgi" do
+cookbook_file "#{node[:apps][:example_project][:virtualenv]}/etc/django.wsgi" do
   source "django.wsgi"
   owner "myuser"
   group "admin"
@@ -32,12 +32,12 @@ nginx_site "myapp" do
   action :enable
 end
 
-postgresql_database node[:application][:dbname] do
+postgresql_database node[:apps][:example_project][:database][:name] do
   host "localhost"
   port 5432
   username "postgres"
   password node[:postgresql][:server_root_password]
-  database node[:application][:dbname]
+  database node[:apps][:example_project][:database][:name]
   action :create_db
 end
 

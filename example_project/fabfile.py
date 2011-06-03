@@ -12,6 +12,8 @@ env.proj_repo = 'git@github.com:lincolnloop/chef-cookbooks.git'
 env.pip_file = env.proj_root + '/requirements.pip'
 env.chef_executable = '/var/lib/gems/1.8/bin/chef-solo'
 env.cookbook_repo = 'git://github.com/lincolnloop/chef-cookbooks.git'
+env.cookbook_rev = 'HEAD'
+env.config_root = join(realpath(dirname(__file__)), 'config')
 
 env.roledefs = {
     'dev': ['exampleproject'],
@@ -20,8 +22,6 @@ env.roledefs = {
 # Default to the dev role if no role was specified
 if not env.get('roles') and not env.get('hosts'):
     env.roles = ['dev']
-    
-CONFIG_ROOT = join(realpath(dirname(__file__)), 'config')
 
 
 def deploy():
@@ -87,7 +87,7 @@ def sync_config():
     sudo('rsync -az ~/.chefconfig/ /etc/chef/')
     sudo('sudo chown -R root:root /etc/chef/')
     with cd("/etc/chef/cookbooks"):
-        sudo('git reset --hard && git pull')
+        sudo('git reset %s --hard && git pull' % env.cookbook_rev)
     
     sudo('%s -j /etc/chef/nodes/%s.json' % (env.chef_executable, env.host))
 
@@ -105,7 +105,7 @@ def bootstrap_chef():
         run('gem install --no-rdoc --no-ri chef')
         
         # Copy the local configuration to the server
-        rsync_project(remote_dir='/etc/chef/', local_dir=CONFIG_ROOT + sep)
+        rsync_project(remote_dir='/etc/chef/', local_dir=env.config_root + sep)
         
         with settings(warn_only=True):
             with hide('everything'):
@@ -113,12 +113,12 @@ def bootstrap_chef():
 
         # If the /etc/chef/cookbooks directory already exists, then make
         # sure the cookbook repo is up to date.  Otherwise, clone it.
-        if test_cookbook_dir.return_code == 0:
-            with cd('/etc/chef/cookbooks'):
-                sshagent_run('git reset --hard && git pull')
-        else:
+        if not test_cookbook_dir.return_code == 0:
             sshagent_run('git clone %s /etc/chef/cookbooks'
                          % env.cookbook_repo)
+        
+        with cd('/etc/chef/cookbooks'):
+            sshagent_run('git reset %s --hard && git pull' % env.cookbook_rev)
         
         run('%s -j /etc/chef/nodes/%s.json' % (env.chef_executable, env.host))
 

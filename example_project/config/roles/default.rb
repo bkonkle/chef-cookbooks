@@ -16,10 +16,15 @@ default_attributes "hosts" => {
   },
   
   # Application settings
-  "application" => {
-    "domain" => "dev.myproject.com",
-    "virtualenv" => "/opt/webapps/example_project",
-    "dbname" => "example_project"
+  "apps" => {
+    "example_project" => {
+      "domain" => "dev.myproject.com",
+      "virtualenv" => "/opt/webapps/example_project",
+      "database" => {
+        "name" => "example_project",
+        "password" => "sdkj3r98hsdkjb"
+      }
+    }
   },
   
   # User settings
