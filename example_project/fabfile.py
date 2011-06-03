@@ -83,7 +83,7 @@ def sync_config():
     chef-solo to update the server.
     """
     rsync_project(remote_dir='~/.chefconfig/',
-                  local_dir=CONFIG_ROOT + sep, delete=True)
+                  local_dir=env.config_root + sep, delete=True)
     sudo('rsync -az ~/.chefconfig/ /etc/chef/')
     sudo('sudo chown -R root:root /etc/chef/')
     with cd("/etc/chef/cookbooks"):
