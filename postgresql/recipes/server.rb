@@ -33,7 +33,7 @@ template "#{node[:postgresql][:dir]}/pg_hba.conf" do
   owner "postgres"
   group "postgres"
   mode 0600
-  notifies :reload, resources(:service => "postgresql")
+  notifies :restart, resources(:service => "postgresql")
 end
 
 template "#{node[:postgresql][:dir]}/postgresql.conf" do
